@@ -122,7 +122,7 @@ class PostController extends Controller
 		$criteria=new CDbCriteria(array(
 			'condition'=>'status='.Post::STATUS_PUBLISHED,
 			'order'=>'update_time DESC',
-			/*'with'=>'commentCount',*/
+			'with'=>'commentsCount',
 		));
 		if(isset($_GET['tag']))
 			$criteria->addSearchCondition('tags',$_GET['tag']);
@@ -161,8 +161,6 @@ class PostController extends Controller
 	 */
 	public function loadModel()
 	{
-		$model=Post::model()->findByPk($id);
-
 		if($this->_model===null)
 		{
 			if(isset($_GET['id']))
@@ -170,7 +168,7 @@ class PostController extends Controller
 				if(Yii::app()->user->isGuest)
 					$condition='status='.Post::STATUS_PUBLISHED.'OR status='.Post::STATUS_ARCHIVED;
 				else
-					$condtion='';
+					$condition='';
 				$this->_model=Post::model()->findByPk($_GET['id'],$condition);
 			}
 			if($this->_model===null)
